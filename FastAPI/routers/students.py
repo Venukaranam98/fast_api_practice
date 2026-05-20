@@ -1,18 +1,27 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
-from database import SessionLocal
+from sqlalchemy.orm import Session
+
+from database import get_db
+
 from models import Student
+
 from schemas import StudentSchema
+
 
 router = APIRouter()
 
-db = SessionLocal()
 
 
 @router.post("/students")
 
+def create_student(
 
-def create_student(student: StudentSchema):
+    student: StudentSchema,
+
+    db: Session = Depends(get_db)
+
+):
 
     new_student = Student(
 
@@ -31,22 +40,43 @@ def create_student(student: StudentSchema):
 
     }
 
+
+
+
 @router.get("/students")
 
+def get_students(
 
-def get_students():
+    db: Session = Depends(get_db)
 
-    students = db.query(Student).all()
+):
+
+    students = db.query(
+
+        Student
+
+    ).all()
 
     return students
 
 
+
+
 @router.get("/students/{student_id}")
 
+def get_student(
 
-def get_student(student_id: int):
+    student_id: int,
 
-    student = db.query(Student).filter(
+    db: Session = Depends(get_db)
+
+):
+
+    student = db.query(
+
+        Student
+
+    ).filter(
 
         Student.id == student_id
 
@@ -55,17 +85,25 @@ def get_student(student_id: int):
     return student
 
 
-@router.put("/students/{student_id}")
 
+
+@router.put("/students/{student_id}")
 
 def put_students(
 
     student_id: int,
-    student_data: StudentSchema
+
+    student_data: StudentSchema,
+
+    db: Session = Depends(get_db)
 
 ):
 
-    student = db.query(Student).filter(
+    student = db.query(
+
+        Student
+
+    ).filter(
 
         Student.id == student_id
 
@@ -82,12 +120,23 @@ def put_students(
     }
 
 
+
+
 @router.delete("/students/{student_id}")
 
+def delete_students(
 
-def delete_students(student_id: int):
+    student_id: int,
 
-    student = db.query(Student).filter(
+    db: Session = Depends(get_db)
+
+):
+
+    student = db.query(
+
+        Student
+
+    ).filter(
 
         Student.id == student_id
 

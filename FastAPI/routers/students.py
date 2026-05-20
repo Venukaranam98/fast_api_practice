@@ -8,6 +8,8 @@ from models import Student
 
 from schemas import StudentSchema
 
+import crud
+
 
 router = APIRouter()
 
@@ -23,23 +25,19 @@ def create_student(
 
 ):
 
-    new_student = Student(
+    crud.create_student(
 
-        name=student.name,
-        marks=student.marks
+        db,
+
+        student
 
     )
-
-    db.add(new_student)
-
-    db.commit()
 
     return {
 
         "message": "Student created successfully"
 
     }
-
 
 
 
@@ -51,13 +49,8 @@ def get_students(
 
 ):
 
-    students = db.query(
-
-        Student
-
-    ).all()
-
-    return students
+    
+    return crud.get_students(db)
 
 
 
@@ -72,18 +65,13 @@ def get_student(
 
 ):
 
-    student = db.query(
+    return crud.get_student(
 
-        Student
+        db,
 
-    ).filter(
+        student_id
 
-        Student.id == student_id
-
-    ).first()
-
-    return student
-
+    )
 
 
 
@@ -99,27 +87,21 @@ def put_students(
 
 ):
 
-    student = db.query(
+    crud.update_student(
 
-        Student
+        db,
 
-    ).filter(
+        student_id,
 
-        Student.id == student_id
+        student_data
 
-    ).first()
-
-    student.marks = student_data.marks
-
-    db.commit()
+    )
 
     return {
 
         "message": "Student updated Successfully"
 
     }
-
-
 
 
 @router.delete("/students/{student_id}")
@@ -132,19 +114,13 @@ def delete_students(
 
 ):
 
-    student = db.query(
+    crud.delete_student(
 
-        Student
+        db,
 
-    ).filter(
+        student_id
 
-        Student.id == student_id
-
-    ).first()
-
-    db.delete(student)
-
-    db.commit()
+    )
 
     return {
 

@@ -10,6 +10,8 @@ from schemas import StudentSchema
 
 import crud
 
+from routers.auth import get_current_user
+
 
 router = APIRouter()
 
@@ -45,7 +47,8 @@ def create_student(
 
 def get_students(
 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
 
 ):
 

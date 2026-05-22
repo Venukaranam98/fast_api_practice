@@ -22,3 +22,10 @@ class LoginSchema(BaseModel):
     email: str
 
     password: str
+
+
+class PostSchema(BaseModel):
+
+    title: str
+
+    content: str
